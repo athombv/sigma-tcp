@@ -70,6 +70,18 @@ static int regmap_read(unsigned int addr, unsigned int len, uint8_t *data)
 
 static int regmap_write(unsigned int addr, unsigned int len, const uint8_t *data)
 {
+	FILE *fd;
+	unsigned int end_addr;
+	
+	end_addr = addr + len;
+
+	while(addr < end_addr) {
+		fd = fopen(regmap_file, "w");
+		fprintf(fd, "%8x %2x\n", addr, *data);
+		addr++;
+		data++;
+		fclose(fd);	
+	}
 	return 1;
 }
 
